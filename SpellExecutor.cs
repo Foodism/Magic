@@ -6,7 +6,8 @@ public class SpellExecutor : MonoBehaviour
 {
     [HideInInspector]
     public SpellManager spellManager;
-    public LineRenderer lr;
+    public LineRenderer firelr;
+    public LineRenderer icelr;
 
     private GameObject mCam;
     Ray ray;
@@ -16,7 +17,8 @@ public class SpellExecutor : MonoBehaviour
         spellManager = GameObject.FindGameObjectWithTag("spellManager").GetComponent<SpellManager>();
         mCam = GameObject.FindGameObjectWithTag("MainCamera");
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        lr = GameObject.FindGameObjectWithTag("FireLine").GetComponent<LineRenderer>();
+        firelr = GameObject.FindGameObjectWithTag("FireLine").GetComponent<LineRenderer>();
+        icelr = GameObject.FindGameObjectWithTag("IceLine").GetComponent<LineRenderer>();
         //lr = lr.GetComponent<LineRenderer>();
 
     }
@@ -46,9 +48,24 @@ public class SpellExecutor : MonoBehaviour
                         hit.rigidbody.AddRelativeForce(ray.direction * currSpell.damage * 100f);
                     }
                 }
-                lr.SetPosition(0, new Vector3(transform.parent.position.x, transform.parent.position.y, transform.parent.position.z));
-                lr.SetPosition(1, hit.point);
+                firelr.SetPosition(0, new Vector3(transform.parent.position.x, transform.parent.position.y, transform.parent.position.z));
+                firelr.SetPosition(1, hit.point);
 
+                break;
+
+            case 1:
+                //Ice
+                RaycastHit hitr;
+
+                if (Physics.Raycast(ray, out hitr))
+                {
+                    if (hitr.rigidbody != null)
+                    {
+                        hitr.rigidbody.AddRelativeForce(ray.direction * currSpell.damage * 100f);
+                    }
+                }
+                icelr.SetPosition(0, new Vector3(transform.parent.position.x, transform.parent.position.y, transform.parent.position.z));
+                icelr.SetPosition(1, hitr.point);
                 break;
             default:
                 break;
